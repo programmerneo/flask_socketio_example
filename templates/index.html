@@ -6,6 +6,7 @@
 </head>
 
 <body>
+    <div id="thetime"></div>
     <div class="container">
         <h3>Yeah! Hey Hey</h3>
         <input id="slider1" class="sync" type="range" min="0" max="50" value="25" />
@@ -16,6 +17,7 @@
     </div>
 
     <script type="text/javascript" charset="utf-8">
+    garbage=''
         /*
             so you socket EMIT to a Python function with a socketio decorator with a ON by the same name
         */
@@ -42,6 +44,11 @@
 
             socket.on('update value', function(msg) {
                 $('input#'+msg.who).val(msg.data)
+            });
+
+             socket.on('the time', function(msg) {
+                console.log(msg.time)
+                $('#thetime').html(msg.time)
             });
 
 
