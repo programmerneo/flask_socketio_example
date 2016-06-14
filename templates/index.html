@@ -1,0 +1,50 @@
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+
+</head>
+
+<body>
+    <div class="container">
+        <h3>Yeah! Hey Hey</h3>
+        <input id="slider1" class="sync" type="range" min="0" max="50" value="25" />
+        <br>
+        <input id="slider2" class="sync" type="range" min="0" max="50" value="0" />
+        <br><br>
+        <input id="txt1" class="sync" type="text" />
+    </div>
+
+    <script type="text/javascript" charset="utf-8">
+        /*
+            so you socket EMIT to a Python function with a socketio decorator with a ON by the same name
+        */
+        $(document).ready(function(){
+
+            var socket = io.connect("http://127.0.0.1:5000/");
+
+            socket.on('connect', function() {
+                 console.log('Connected !!');
+            });
+
+            socket.on( 'disconnect', function() {
+                console.log('my connection dropped');
+            } );
+
+            socket.on( 'reconnect', function() {
+                console.log('my connection has been restored!');
+            } );
+
+            $('input.sync').on('input', function(event) {
+                socket.emit('value changed', {who: $(this).attr('id'), data: $(this).val()});
+                return false;
+            });
+
+            socket.on('update value', function(msg) {
+                $('input#'+msg.who).val(msg.data)
+            });
+
+
+        });
+    </script>
+</body>
